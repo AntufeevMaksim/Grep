@@ -5,9 +5,14 @@ class Params
   public string FilePath {get; private set;}
   public Mode Mode{get; private set;}
   public string Word{get; private set;}
+  public CheckSumMode CheckSumMode{get; private set;}
+  public CountWordsMode CountWordsMode{get; private set;}
 
   public void Parse(string[] args)
   {
+    CheckSumMode = CheckSumMode.MD5; //test
+    CountWordsMode = CountWordsMode.CaseSensitive;//test
+
     ParseStartParam(args[0]);
 
     if (StartParam == StartParam.Help)
@@ -63,4 +68,14 @@ enum Mode
 {
   CountWords,
   CheckSum
+}
+
+enum CheckSumMode
+{
+  MD5
+}
+
+enum CountWordsMode
+{
+  CaseSensitive
 }

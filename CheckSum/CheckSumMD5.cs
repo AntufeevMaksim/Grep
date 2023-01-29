@@ -1,8 +1,10 @@
+
 using System.Security.Cryptography;
 using System.Text;
-class CheckSum
+
+class CheckSumMD5 : ICheckSum
 {
-  public byte[] Checksum(string text)
+  public byte[] CheckSum(string text)
   {
     var md5 = MD5.Create();
     byte[] checksum = md5.ComputeHash(Encoding.UTF8.GetBytes(text));
