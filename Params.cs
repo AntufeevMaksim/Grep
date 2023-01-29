@@ -1,6 +1,9 @@
 
 class Params
 {
+//  public bool ArgError{get; private set;}
+  private bool _argError;
+
   public StartParam StartParam {get; private set;}
   public string FilePath {get; private set;}
   public Mode Mode{get; private set;}
@@ -13,19 +16,50 @@ class Params
     CheckSumMode = CheckSumMode.MD5; //test
     CountWordsMode = CountWordsMode.CaseSensitive;//test
 
-    ParseStartParam(args[0]);
+    ParseArgs(args);
 
-    if (StartParam == StartParam.Help)
-      return;
+    while (_argError)
+    {
+      PrintError("Invalid arguments, try again");
+      args = Console.ReadLine().Split();
+      ParseArgs(args);
+    }
 
-    FilePath = args[1];
-
-    ParseMode(args[3]);
-
-    if (Mode == Mode.CountWords)
-      Word = args[5];
+    while (!File.Exists(FilePath))
+    {
+      ChangeFilePath();
+    }    
   }
 
+  private void ChangeFilePath()
+  {
+    PrintError("File path is incorrect, try again");
+    FilePath = Console.ReadLine();
+  }
+
+  private void ParseArgs(string[] args)
+  {
+    try
+    {
+      ParseStartParam(args[0]);
+
+      if (StartParam == StartParam.Help)
+        return;
+
+      FilePath = args[1];
+
+      ParseMode(args[3]);
+
+      if (Mode == Mode.CountWords)
+        Word = args[5];
+
+      _argError = false;
+    }
+    catch (IndexOutOfRangeException)
+    {
+      _argError = true;
+    }
+  }
   private void ParseMode(string arg)
   {
     switch (arg)
@@ -55,6 +89,12 @@ class Params
         StartParam = StartParam.Help;
         break;
     }
+  }
+  private void PrintError(string text)
+  {
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine(text);
+    Console.ForegroundColor = ConsoleColor.White;
   }
 }
 

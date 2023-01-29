@@ -3,12 +3,8 @@ class Grep
 {
   Params _params = new Params();
 
-  Dictionary<CheckSumMode, ICheckSum> _checkSum = new Dictionary<CheckSumMode, ICheckSum>{
-    {CheckSumMode.MD5, new CheckSumMD5()}
-  };
-  Dictionary<CountWordsMode, ICountWords> _countWords = new Dictionary<CountWordsMode, ICountWords>{
-    {CountWordsMode.CaseSensitive, new CountWordsCaseSensitive()}
-  };
+  CountWordsCaseSensitive _countWords = new CountWordsCaseSensitive();
+  CheckSumMD5 _checkSum = new CheckSumMD5();
 
   string _helpInformation = "help";
   string _fileText;
@@ -31,18 +27,16 @@ class Grep
     switch (_params.Mode)
     {
       case (Mode.CountWords):
-        _output = _countWords[_params.CountWordsMode].CountWords(_fileText, _params.Word).ToString();
+        _output = _countWords.CountWords(_fileText, _params.Word).ToString();
         break;
       case (Mode.CheckSum):
-        _output = System.BitConverter.ToString(_checkSum[_params.CheckSumMode].CheckSum(_fileText));
+        _output = System.BitConverter.ToString(_checkSum.CheckSum(_fileText));
         break;
     }
 
     Console.WriteLine(_output);
-    
+
   }
 
-  
 }
-
 
