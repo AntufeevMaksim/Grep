@@ -2,52 +2,58 @@
 using CheckSum;
 using CountWords;
 
-class Grep
+namespace Prog
 {
-  Params _params = new Params();
-
-  CountWordsCaseSensitive _countWords = new CountWordsCaseSensitive();
-  CheckSumMD5 _checkSum = new CheckSumMD5();
-
-  string _helpInformation = "help";
-
-
-  public void Run(string[] args)
+  public class Grep
   {
-    _params.Parse(args);
+    Params _params = new Params();
 
-  
-    StreamReader stream = default;
-    switch (_params.StartParam)
+    ICheckSum _checkSum;
+    ICountWords _countWords;
+
+    string _helpInformation = "help";
+
+    public Grep(ICheckSum check_sum, ICountWords count_words)
     {
-      case (StartParam.Help):
-        Console.WriteLine(_helpInformation);
-        return;
-      case (StartParam.WorkWithFile):
-        stream = new StreamReader(_params.FilePath);
-        break;
+      _checkSum = check_sum;
+      _countWords = count_words;
     }
 
-    string output = StartWorkWithFile(stream);
-
-    Console.WriteLine(output);
-
-  }
-
-  private string StartWorkWithFile(StreamReader stream)
-  {
-    string output = "";
-    string text = stream.ReadToEnd();
-    switch (_params.Mode)
+    public string Run(string[] args)
     {
-      case (Mode.CountWords):
-        output = _countWords.CountWords(text, _params.Word).ToString();
-        break;
-      case (Mode.CheckSum):
-        output = System.BitConverter.ToString(_checkSum.CheckSum(text));
-        break;
+      _params.Parse(args);
+
+
+      StreamReader stream = default;
+      switch (_params.StartParam)
+      {
+        case (StartParam.Help):
+          return _helpInformation;
+        case (StartParam.WorkWithFile):
+          stream = new StreamReader(_params.FilePath);
+          break;
+      }
+
+      string output = StartWorkWithFile(stream);
+
+      return output;
+
     }
-    return output;
+
+    private string StartWorkWithFile(StreamReader stream)
+    {
+      string output = "";
+      string text = stream.ReadToEnd();
+      switch (_params.Mode)
+      {
+        case (Mode.CountWords):
+          output = _countWords.CountWords(text, _params.Word).ToString();
+          break;
+        case (Mode.CheckSum):
+          output = System.BitConverter.ToString(_checkSum.CheckSum(text));
+          break;
+      }
+      return output;
+    }
   }
 }
-
