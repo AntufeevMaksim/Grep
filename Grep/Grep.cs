@@ -6,7 +6,6 @@ namespace Prog
 {
   public class Grep
   {
-    Params _params = new Params();
 
     ICheckSum _checkSum;
     ICountWords _countWords;
@@ -17,37 +16,39 @@ namespace Prog
     {
       _checkSum = check_sum;
       _countWords = count_words;
+
     }
 
-    public string Run(string[] args)
+    public string Run(IParams param, string text)
     {
-      _params.Parse(args);
 
-
-      StreamReader stream = default;
-      switch (_params.StartParam)
+      if (param.StartParam == StartParam.Help)
       {
-        case (StartParam.Help):
-          return _helpInformation;
-        case (StartParam.WorkWithFile):
-          stream = new StreamReader(_params.FilePath);
-          break;
+        return _helpInformation;
       }
 
-      string output = StartWorkWithFile(stream);
+      // switch (param.StartParam)
+      // {
+      //   case (StartParam.Help):
+      //     return _helpInformation;
+      //   case (StartParam.WorkWithFile):
+      //     stream = new StreamReader(param.FilePath);
+      //     break;
+      // }
+
+      string output = StartWorkWithFile(text, param);
 
       return output;
 
     }
 
-    private string StartWorkWithFile(StreamReader stream)
+    private string StartWorkWithFile(string text, IParams param)
     {
       string output = "";
-      string text = stream.ReadToEnd();
-      switch (_params.Mode)
+      switch (param.Mode)
       {
         case (Mode.CountWords):
-          output = _countWords.CountWords(text, _params.Word).ToString();
+          output = _countWords.CountWords(text, param.Word).ToString();
           break;
         case (Mode.CheckSum):
           output = System.BitConverter.ToString(_checkSum.CheckSum(text));

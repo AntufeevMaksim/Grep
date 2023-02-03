@@ -1,7 +1,7 @@
 
 namespace CountWords
 {
-  interface ICountWords
+  public interface ICountWords
   {
     int CountWords(string text, string word);
   }

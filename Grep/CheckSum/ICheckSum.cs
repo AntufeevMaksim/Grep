@@ -1,7 +1,7 @@
 
 namespace CheckSum
 {
-  interface ICheckSum
+  public interface ICheckSum
   {
     byte[] CheckSum(string text);
   }

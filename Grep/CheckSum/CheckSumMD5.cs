@@ -5,7 +5,7 @@ using System.Text;
 namespace CheckSum
 {
 
-  class CheckSumMD5 : ICheckSum
+  public class CheckSumMD5 : ICheckSum
   {
     public byte[] CheckSum(string text)
     {
